@@ -515,16 +515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
-  positions:
-  - {fileID: 1107661020406190}
-  - {fileID: 1314617985961830}
-  - {fileID: 1080370648405890}
-  - {fileID: 1866990694349354}
-  - {fileID: 1826449413777386}
-  - {fileID: 1894079080458318}
-  - {fileID: 1312014850999518}
-  - {fileID: 1234938772473360}
-  - {fileID: 1412507107261850}
+  positions: {fileID: 4925837504548610}
   moveDelay: 0.5
 --- !u!212 &212477131761914000
 SpriteRenderer:
