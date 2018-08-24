@@ -6,29 +6,53 @@ public class GameManager : MonoBehaviour {
 
     public GameObject jumperPrefab;
     public GameObject fireman;
+    public LifeViewController lifeViewController;
+
+    Collider2D firemanCollider;
 
 	// Use this for initialization
 	void Start () {
+        firemanCollider = fireman.GetComponentInChildren<Collider2D>();
+        lifeViewController.RestoreAllLives();
+        NewJumper();
+	}
+
+    void NewJumper() {
         GameObject newJumper = Instantiate(jumperPrefab);
         newJumper.GetComponentInChildren<JumperController>().gameManager = this;
-
-	}
+    }
 
     public bool Crash(GameObject jumper) {
         Collider2D jumperCollider = jumper.GetComponent<Collider2D>();
-        Collider2D firemanCollider = fireman.GetComponentInChildren<Collider2D>();
-
-        if (jumperCollider == null || firemanCollider == null) {
-            Debug.Log("Did not get both colliders");
-        }
 
         if (jumperCollider.IsTouching(firemanCollider)) {
-            Debug.Log("Saved the jumper");
             return false;
         } 
         else {
-            Debug.Log("You died!");
+            LoseOneLife();
             return true;
         }
     }
+
+    void LoseOneLife() {
+        if (!lifeViewController.RemoveLife()) {
+            Debug.Log("Game Over!");
+        } else {
+            NewJumper();    
+        }
+    }
+
+
+
+
+
+
+
+    //private void Update() {
+    //    if ( firemanCollider.IsTouching(tempJumperCollider)) {
+    //        fireman.GetComponentInChildren<SpriteRenderer>().color = Color.yellow;
+    //    } else {
+    //        fireman.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+    //    }
+    //}
 }

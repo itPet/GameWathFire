@@ -20,18 +20,19 @@ public class JumperController : MonoBehaviour {
     IEnumerator MoveJumper() {
         while (true) {
             yield return new WaitForSeconds(moveDelay);
-            MoveToNextPosition();
+            StartCoroutine(MoveToNextPosition());
         }
     }
-	
-	// Update is called once per frame
-	//void Update () {
- //       if ( Time.time > lastMoveTime + moveDelay) {
- //           MoveToNextPosition();
- //       }
-	//}
 
-    void MoveToNextPosition() {
+    // Update is called once per frame
+    //void Update () {
+    //       if ( Time.time > lastMoveTime + moveDelay) {
+    //           MoveToNextPosition();
+    //       }
+    //}
+
+    // Helper function to MoveJumper()
+    IEnumerator MoveToNextPosition() {
         currentPosition++;
         if (currentPosition >= positions.Count)
             currentPosition = 0;
@@ -39,13 +40,18 @@ public class JumperController : MonoBehaviour {
         transform.position = positions[currentPosition].transform.position;
         lastMoveTime = Time.time;
 
+        // Wait one frame until crach check is done so physics is calculatet
+        yield return null;
+
         if (positions[currentPosition].GetComponent<JumperPosition>().dangerPosition) {
             if (gameManager.Crash(gameObject)) {
-                Debug.Log("Game over!");
-            } else {
-                Debug.Log("Continue game");
+                Die();
             }
         }
+    }
+
+    void Die() {
+        Destroy(transform.parent.gameObject);
     }
 
 }
