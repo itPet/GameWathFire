@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class JumperController : MonoBehaviour {
-
-    [HideInInspector]
+    
     public GameManager gameManager;
     public Transform positions;
     public float moveDelay = 0.5f;
@@ -21,7 +20,7 @@ public class JumperController : MonoBehaviour {
     IEnumerator MoveJumper() {
         while (true) {
             yield return new WaitForSeconds(moveDelay);
-            StartCoroutine(MoveToNextPosition());
+            MoveToNextPosition();
         }
     }
 
@@ -33,17 +32,17 @@ public class JumperController : MonoBehaviour {
     //}
 
     // Helper function to MoveJumper()
-    IEnumerator MoveToNextPosition() {
+    void MoveToNextPosition() {
         currentPosition++;
-        if (currentPosition >= positions.childCount)
+        if (currentPosition >= positions.childCount) {
             currentPosition = 0;
+            gameManager.JumperSaved();
+            Destroy(transform.parent.gameObject);
+        }
         
         transform.position = positions.GetChild(currentPosition).transform.position;
         lastMoveTime = Time.time;
-
-        // Wait one frame until crach check is done so physics is calculatet
-        yield return null;
-
+             
         if (positions.GetChild(currentPosition).GetComponent<JumperPosition>().dangerPosition) {
             if (gameManager.Crash(gameObject)) {
                 Die();

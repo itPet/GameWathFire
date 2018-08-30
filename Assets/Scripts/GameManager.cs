@@ -7,10 +7,11 @@ public class GameManager : MonoBehaviour {
     public GameObject jumperPrefab;
     public GameObject fireman;
     public LifeViewController lifeViewController;
+    public PointsController pointsView;
 
     Collider2D firemanCollider;
 
-	// Use this for initialization
+	
 	void Start () {
         firemanCollider = fireman.GetComponentInChildren<Collider2D>();
         lifeViewController.RestoreAllLives();
@@ -22,10 +23,17 @@ public class GameManager : MonoBehaviour {
         newJumper.GetComponentInChildren<JumperController>().gameManager = this;
     }
 
+    public void JumperSaved() {
+        pointsView.AddPoints();
+    }
+
     public bool Crash(GameObject jumper) {
         Collider2D jumperCollider = jumper.GetComponent<Collider2D>();
 
-        if (jumperCollider.IsTouching(firemanCollider)) {
+        LayerMask mask = LayerMask.GetMask("Fireman");
+        RaycastHit2D hit = Physics2D.Raycast(jumper.transform.position, Vector2.down, Mathf.Infinity, mask);
+
+        if (hit.collider != null) {
             return false;
         } 
         else {
